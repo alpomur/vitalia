@@ -820,6 +820,49 @@ $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
             return div.innerHTML;
         }
         
+        // Markdown to HTML parser
+        function formatMessage(text) {
+            // Önce XSS için escape et
+            let html = escapeHtml(text);
+            
+            // **bold** -> <strong>
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // *italic* -> <em>
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Numaralı liste (1. 2. 3.)
+            html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li>$2</li>');
+            
+            // Liste itemlarını <ol> ile sar
+            if (html.includes('<li>')) {
+                html = html.replace(/(<li>.*<\/li>)/gs, function(match) {
+                    // Ardışık li'leri bul ve ol ile sar
+                    return '<ol class="msg-list">' + match + '</ol>';
+                });
+                // Birden fazla ol'u birleştir
+                html = html.replace(/<\/ol>\s*<ol class="msg-list">/g, '');
+            }
+            
+            // - ile başlayan bullet listeler
+            html = html.replace(/^-\s+(.+)$/gm, '<li class="bullet">$1</li>');
+            if (html.includes('<li class="bullet">')) {
+                html = html.replace(/(<li class="bullet">.*<\/li>)/gs, function(match) {
+                    return '<ul class="msg-list">' + match + '</ul>';
+                });
+                html = html.replace(/<\/ul>\s*<ul class="msg-list">/g, '');
+            }
+            
+            // Yeni satırları <br> yap (liste içinde değilse)
+            html = html.replace(/\n/g, '<br>');
+            
+            // Temizlik: <br> ardından gelen liste etiketlerini düzelt
+            html = html.replace(/<br><(ol|ul)/g, '<$1');
+            html = html.replace(/<\/(ol|ul)><br>/g, '</$1>');
+            
+            return html;
+        }
+        
         // Quick actions
         async function addWater() {
             try {
