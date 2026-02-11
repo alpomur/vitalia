@@ -538,8 +538,11 @@ $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
             </div>
             <div class="header-actions">
                 <select class="lang-select" onchange="changeLanguage(this.value)">
-                    <option value="tr" <?= $lang === 'tr' ? 'selected' : '' ?>>🇹🇷 TR</option>
-                    <option value="en" <?= $lang === 'en' ? 'selected' : '' ?>>🇬🇧 EN</option>
+                    <?php foreach ($supportedLangs as $l): ?>
+                    <option value="<?= $l['code'] ?>" <?= $lang === $l['code'] ? 'selected' : '' ?>>
+                        <?= $l['flag'] ?> <?= strtoupper($l['code']) ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
                 <button class="icon-btn" onclick="toggleTheme()" title="Tema">
                     <i class="fas fa-moon"></i>
