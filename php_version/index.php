@@ -794,7 +794,9 @@ $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
             const chatArea = document.getElementById('chatArea');
             const div = document.createElement('div');
             div.className = 'message ' + role;
-            div.innerHTML = '<div class="message-content">' + escapeHtml(text) + '</div>';
+            // Assistant mesajları için markdown formatla, user için escape et
+            const formattedText = role === 'assistant' ? formatMessage(text) : escapeHtml(text);
+            div.innerHTML = '<div class="message-content">' + formattedText + '</div>';
             chatArea.appendChild(div);
             chatArea.scrollTop = chatArea.scrollHeight;
         }
