@@ -547,12 +547,21 @@ $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
                 <button class="icon-btn" onclick="toggleTheme()" title="Tema">
                     <i class="fas fa-moon"></i>
                 </button>
+                <a href="workout.php?lang=<?= $lang ?>" class="icon-btn" title="<?= $t['workoutPlans'] ?? 'Spor Planları' ?>">
+                    <i class="fas fa-dumbbell"></i>
+                </a>
+                <a href="food.php?lang=<?= $lang ?>" class="icon-btn" title="<?= $t['outsideFood'] ?? 'Dışarıda Yemek' ?>">
+                    <i class="fas fa-utensils"></i>
+                </a>
                 <button class="icon-btn" onclick="openModal('dashboard')" title="<?= $t['dashboard'] ?>">
                     <i class="fas fa-chart-bar"></i>
                 </button>
                 <button class="icon-btn" onclick="openModal('profile')" title="<?= $t['profile'] ?>">
                     <i class="fas fa-user"></i>
                 </button>
+                <a href="admin.php" class="icon-btn" title="<?= $t['admin'] ?? 'Admin' ?>">
+                    <i class="fas fa-cog"></i>
+                </a>
             </div>
         </header>
         
