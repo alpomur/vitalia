@@ -247,6 +247,8 @@ CREATE TABLE IF NOT EXISTS motivation_templates (
   language VARCHAR(5) NOT NULL DEFAULT 'tr',
   message_text TEXT NOT NULL,
   is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_trigger_lang (trigger_type, language)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
