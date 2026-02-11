@@ -1,148 +1,71 @@
-# Vitalia - PHP + MySQL Version
-# Chat-First Personal Health Advisor
+# Vitalia - Düz PHP + MySQL Versiyonu
 
-Bu klasör, Vitalia uygulamasının paylaşımlı Linux hosting için PHP + MySQL versiyonunu içerir.
+Paylaşımlı hosting için hazır, React gerektirmeyen saf PHP çözümü.
 
-## Dosya Yapısı
+## Dosyalar
 
 ```
 php_version/
-├── config.php          # Veritabanı ve API yapılandırması
-├── database.sql        # MySQL veritabanı şeması
-├── index.php           # API Router (tüm istekleri yönlendirir)
-├── server-config.md    # Apache/Nginx yapılandırması
-├── api/
-│   ├── chat.php        # Chat API endpoint'leri
-│   ├── log.php         # Daily log endpoint'leri  
-│   ├── auth.php        # Authentication endpoint'leri
-│   ├── admin.php       # Admin panel endpoint'leri
-│   └── profile.php     # Profil endpoint'leri
-└── README.md           # Bu dosya
+├── index.php       # Ana sayfa (Chat arayüzü - HTML/CSS/JS içerir)
+├── api.php         # Tüm API endpoint'leri
+├── admin.php       # Yönetim paneli
+├── config.php      # Yapılandırma dosyası
+├── database.sql    # MySQL veritabanı şeması
+├── .htaccess       # Apache ayarları
+└── README.md       # Bu dosya
 ```
 
-## API Endpoints
+## Kurulum (5 Dakika)
 
-### Chat
-| Endpoint | Method | Açıklama |
-|----------|--------|----------|
-| `/api/chat` | POST | Mesaj gönder |
-| `/api/chat/welcome` | GET | Hoşgeldin mesajı |
-| `/api/chat/history` | GET | Chat geçmişi |
+### 1. Dosyaları Yükle
+Tüm dosyaları FTP ile hosting'e yükleyin.
 
-### Daily Logs
-| Endpoint | Method | Açıklama |
-|----------|--------|----------|
-| `/api/log/quick-action` | POST | Hızlı eylem (su, adım, spor, kilo) |
-| `/api/log/today` | GET | Bugünkü log |
-| `/api/log/history` | GET | Geçmiş loglar |
+### 2. Veritabanı Oluştur
+cPanel > MySQL Databases'den yeni veritabanı oluşturun.
+phpMyAdmin'den `database.sql` dosyasını import edin.
 
-### Authentication
-| Endpoint | Method | Açıklama |
-|----------|--------|----------|
-| `/api/auth/session` | POST | Google OAuth sonrası session |
-| `/api/auth/me` | GET | Mevcut kullanıcı |
-| `/api/auth/logout` | POST | Çıkış |
-| `/api/auth/google` | GET | Google OAuth başlat |
-| `/api/auth/google/callback` | GET | OAuth callback |
-
-### Profile
-| Endpoint | Method | Açıklama |
-|----------|--------|----------|
-| `/api/profile` | GET | Profil getir |
-| `/api/profile` | POST | Profil güncelle |
-
-### Admin
-| Endpoint | Method | Açıklama |
-|----------|--------|----------|
-| `/api/admin/dashboard` | GET | Dashboard istatistikleri |
-| `/api/admin/users` | GET | Kullanıcı listesi |
-| `/api/admin/users/{id}/ban` | POST | Kullanıcı ban/unban |
-| `/api/admin/settings` | GET/POST | Sistem ayarları |
-| `/api/admin/faq` | GET/POST | FAQ yönetimi |
-
-## Kurulum Adımları
-
-### 1. Veritabanı Kurulumu
-
-```bash
-# phpMyAdmin veya MySQL CLI ile
-mysql -u kullanici -p vitalia_db < database.sql
-```
-
-### 2. config.php Yapılandırması
-
+### 3. config.php Düzenle
 ```php
-// Veritabanı
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'vitalia_db');
-define('DB_USER', 'veritabani_kullanici');
-define('DB_PASS', 'veritabani_sifre');
+define('DB_NAME', 'kullanici_vitalia');  // cPanel'den
+define('DB_USER', 'kullanici_dbuser');    // cPanel'den
+define('DB_PASS', 'sifreniz');
 
-// OpenAI API
-define('OPENAI_API_KEY', 'sk-...');
-
-// Google OAuth (opsiyonel)
-define('GOOGLE_CLIENT_ID', '...');
-define('GOOGLE_CLIENT_SECRET', '...');
-define('GOOGLE_REDIRECT_URI', 'https://siteniz.com/api/auth/google/callback');
-
-// Site URL
-define('APP_URL', 'https://siteniz.com');
+define('OPENAI_API_KEY', 'sk-...');  // OpenAI API anahtarınız
 ```
 
-### 3. Frontend Build
+### 4. Test Et
+- `https://siteniz.com/` - Chat sayfası
+- `https://siteniz.com/admin.php` - Yönetim paneli
 
-```bash
-cd /app/frontend
-yarn build
-# build klasörünü public_html'e kopyala
-```
+## Özellikler
 
-### 4. Dosya Yükleme
+✅ Chat arayüzü (AI destekli)
+✅ Su takibi
+✅ Hareket seviyesi
+✅ Spor kaydı
+✅ Kilo girişi
+✅ Profil yönetimi
+✅ Dark mode
+✅ Türkçe/İngilizce dil desteği
+✅ Admin paneli
+✅ Kullanıcı yönetimi
+✅ Ayarlar yönetimi
+✅ Konfeti efekti
 
-Paylaşımlı hosting'e yükle:
-```
-public_html/
-├── index.html      # React build
-├── index.php       # API router  
-├── config.php      # Yapılandırma
-├── api/            # API dosyaları
-├── static/         # React static
-└── .htaccess       # server-config.md'den kopyala
-```
+## API Endpoint'leri (api.php)
 
-### 5. .htaccess Ayarları
+| Action | Method | Açıklama |
+|--------|--------|----------|
+| chat_send | POST | Mesaj gönder |
+| chat_history | GET | Chat geçmişi |
+| quick_action | POST | Su/adım/spor/kilo |
+| log_today | GET | Bugünkü veriler |
+| profile_save | POST | Profil kaydet |
 
-`server-config.md` dosyasındaki Apache konfigürasyonunu `.htaccess` olarak kaydet.
+## Notlar
 
-## Güvenlik Notları
-
-1. ✅ `config.php` web erişimine kapalı (.htaccess ile)
-2. ✅ SSL sertifikası kullanın
-3. ✅ Rate limiting aktif
-4. ✅ Prepared statements ile SQL injection koruması
-5. ✅ XSS koruması (JSON output)
-
-## Test
-
-```bash
-# API health check
-curl https://siteniz.com/api/health
-
-# Chat test
-curl -X POST https://siteniz.com/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Merhaba!", "language": "tr"}'
-```
-
-## Gereksinimler
-
-- PHP 8.0+
-- MySQL 5.7+ / MariaDB 10.3+
-- Apache mod_rewrite veya Nginx
-- SSL sertifikası
-- PHP Extensions: curl, json, pdo_mysql, mbstring
-
-## Destek
-
-Sorunlar için GitHub Issues kullanın.
+- OpenAI API anahtarı gerekli
+- PHP 7.4+ gerekli
+- MySQL 5.7+ gerekli
+- cURL extension gerekli
