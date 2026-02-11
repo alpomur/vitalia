@@ -296,7 +296,7 @@ INSERT INTO outside_food_categories (category_key, name, icon, sort_order) VALUE
 ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
 
 -- Sample motivation templates
-INSERT INTO motivation_templates (trigger_type, language, message_text) VALUES
+INSERT IGNORE INTO motivation_templates (trigger_type, language, message_text) VALUES
 ('water_goal', 'tr', 'Bugünkü su hedefine ulaştın! 🎉💧 Vücudun sana teşekkür ediyor!'),
 ('water_goal', 'en', 'You reached your water goal today! 🎉💧 Your body thanks you!'),
 ('workout_done', 'tr', 'Antrenmanı tamamladın! 💪 Her egzersiz seni hedefine yaklaştırıyor!'),
@@ -304,8 +304,7 @@ INSERT INTO motivation_templates (trigger_type, language, message_text) VALUES
 ('streak', 'tr', 'Üst üste 7 gün! 🔥 Tutarlılık başarının anahtarı!'),
 ('streak', 'en', '7 days in a row! 🔥 Consistency is the key to success!'),
 ('check_in', 'tr', 'Bugün de buradasın! 🌟 Küçük adımlar büyük değişimler yaratır!'),
-('check_in', 'en', 'You showed up today! 🌟 Small steps create big changes!')
-ON DUPLICATE KEY UPDATE message_text = VALUES(message_text);
+('check_in', 'en', 'You showed up today! 🌟 Small steps create big changes!');
 
 -- Admin user
 INSERT INTO users (user_id, email, name, role, auth_provider, status, preferred_language)
