@@ -278,12 +278,12 @@ ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
 
 -- Sample FAQ entries
 INSERT INTO qa_faq (topic, tag, question_example, answer_text, is_active) VALUES
-('water', 'günlük su', 'Günde ne kadar su içmeliyim?', 'Günlük su ihtiyacın kilona göre değişir. Genel kural: kilo (kg) x 30 ml. Örneğin 70 kg için yaklaşık 2.1 litre (8-9 bardak). Egzersiz günlerinde 500ml daha ekle! 💧', 1),
-('exercise', 'başlangıç spor', 'Spora yeni başlıyorum ne yapmalıyım?', 'Harika bir karar! 🎉 Başlangıç için haftada 3 gün, 20-30 dakika yeterli. Önce yürüyüş ve basit vücut ağırlığı egzersizleriyle başla. Spor Planları sayfasından sana uygun programı seçebilirsin!', 1),
+('water', 'gunluk-su', 'Günde ne kadar su içmeliyim?', 'Günlük su ihtiyacın kilona göre değişir. Genel kural: kilo (kg) x 30 ml. Örneğin 70 kg için yaklaşık 2.1 litre (8-9 bardak). Egzersiz günlerinde 500ml daha ekle! 💧', 1),
+('exercise', 'baslangic-spor', 'Spora yeni başlıyorum ne yapmalıyım?', 'Harika bir karar! 🎉 Başlangıç için haftada 3 gün, 20-30 dakika yeterli. Önce yürüyüş ve basit vücut ağırlığı egzersizleriyle başla. Spor Planları sayfasından sana uygun programı seçebilirsin!', 1),
 ('nutrition', 'protein', 'Protein ne kadar almalıyım?', 'Aktif bireyler için günlük 1.6-2.2 g/kg protein önerilir. Kaynak olarak: tavuk, balık, yumurta, süt ürünleri, baklagiller. Her öğünde avuç içi kadar protein hedefle! 💪', 1),
-('weight', 'kilo verme', 'Sağlıklı kilo verme hızı nedir?', 'Haftada 0.5-1 kg sağlıklı kabul edilir. Daha hızlısı kas kaybına yol açabilir. Sabırlı ol, tutarlı kal. Küçük adımlar büyük sonuçlar doğurur! 🎯', 1),
+('weight', 'kilo-verme', 'Sağlıklı kilo verme hızı nedir?', 'Haftada 0.5-1 kg sağlıklı kabul edilir. Daha hızlısı kas kaybına yol açabilir. Sabırlı ol, tutarlı kal. Küçük adımlar büyük sonuçlar doğurur! 🎯', 1),
 ('motivation', 'motivasyon', 'Motivasyonum düşük ne yapmalıyım?', 'Bu tamamen normal! Küçük hedefler koy, her başarıyı kutla. Bugün sadece bir bardak su daha iç veya 10 dakika yürü. Mükemmel olmak değil, devam etmek önemli! Sen yapabilirsin! 💪✨', 1)
-ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
+ON DUPLICATE KEY UPDATE answer_text = VALUES(answer_text), question_example = VALUES(question_example);
 
 -- Sample outside food categories
 INSERT INTO outside_food_categories (category_key, name, icon, sort_order) VALUES
