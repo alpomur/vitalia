@@ -9,28 +9,67 @@ Bu klasör, Vitalia uygulamasının paylaşımlı Linux hosting için PHP + MySQ
 php_version/
 ├── config.php          # Veritabanı ve API yapılandırması
 ├── database.sql        # MySQL veritabanı şeması
+├── index.php           # API Router (tüm istekleri yönlendirir)
+├── server-config.md    # Apache/Nginx yapılandırması
 ├── api/
-│   └── chat.php        # Ana chat API endpoint'i
+│   ├── chat.php        # Chat API endpoint'leri
+│   ├── log.php         # Daily log endpoint'leri  
+│   ├── auth.php        # Authentication endpoint'leri
+│   ├── admin.php       # Admin panel endpoint'leri
+│   └── profile.php     # Profil endpoint'leri
 └── README.md           # Bu dosya
 ```
+
+## API Endpoints
+
+### Chat
+| Endpoint | Method | Açıklama |
+|----------|--------|----------|
+| `/api/chat` | POST | Mesaj gönder |
+| `/api/chat/welcome` | GET | Hoşgeldin mesajı |
+| `/api/chat/history` | GET | Chat geçmişi |
+
+### Daily Logs
+| Endpoint | Method | Açıklama |
+|----------|--------|----------|
+| `/api/log/quick-action` | POST | Hızlı eylem (su, adım, spor, kilo) |
+| `/api/log/today` | GET | Bugünkü log |
+| `/api/log/history` | GET | Geçmiş loglar |
+
+### Authentication
+| Endpoint | Method | Açıklama |
+|----------|--------|----------|
+| `/api/auth/session` | POST | Google OAuth sonrası session |
+| `/api/auth/me` | GET | Mevcut kullanıcı |
+| `/api/auth/logout` | POST | Çıkış |
+| `/api/auth/google` | GET | Google OAuth başlat |
+| `/api/auth/google/callback` | GET | OAuth callback |
+
+### Profile
+| Endpoint | Method | Açıklama |
+|----------|--------|----------|
+| `/api/profile` | GET | Profil getir |
+| `/api/profile` | POST | Profil güncelle |
+
+### Admin
+| Endpoint | Method | Açıklama |
+|----------|--------|----------|
+| `/api/admin/dashboard` | GET | Dashboard istatistikleri |
+| `/api/admin/users` | GET | Kullanıcı listesi |
+| `/api/admin/users/{id}/ban` | POST | Kullanıcı ban/unban |
+| `/api/admin/settings` | GET/POST | Sistem ayarları |
+| `/api/admin/faq` | GET/POST | FAQ yönetimi |
 
 ## Kurulum Adımları
 
 ### 1. Veritabanı Kurulumu
 
-1. phpMyAdmin veya MySQL komut satırından `database.sql` dosyasını import edin:
-```sql
+```bash
+# phpMyAdmin veya MySQL CLI ile
 mysql -u kullanici -p vitalia_db < database.sql
 ```
 
-2. Admin kullanıcı email'ini güncelleyin:
-```sql
-UPDATE users SET email = 'sizin@email.com' WHERE user_id = 'admin_001';
-```
-
-### 2. Yapılandırma
-
-`config.php` dosyasındaki aşağıdaki değerleri güncelleyin:
+### 2. config.php Yapılandırması
 
 ```php
 // Veritabanı
@@ -39,74 +78,71 @@ define('DB_NAME', 'vitalia_db');
 define('DB_USER', 'veritabani_kullanici');
 define('DB_PASS', 'veritabani_sifre');
 
-// OpenAI
+// OpenAI API
 define('OPENAI_API_KEY', 'sk-...');
 
-// Google OAuth
+// Google OAuth (opsiyonel)
 define('GOOGLE_CLIENT_ID', '...');
 define('GOOGLE_CLIENT_SECRET', '...');
-define('GOOGLE_REDIRECT_URI', 'https://siteniz.com/auth/google/callback');
+define('GOOGLE_REDIRECT_URI', 'https://siteniz.com/api/auth/google/callback');
 
-// Uygulama
+// Site URL
 define('APP_URL', 'https://siteniz.com');
 ```
 
-### 3. Frontend Dosyaları
+### 3. Frontend Build
 
-React frontend'i build edin ve `public` klasörüne kopyalayın:
 ```bash
-cd frontend
+cd /app/frontend
 yarn build
-cp -r build/* /path/to/public_html/
+# build klasörünü public_html'e kopyala
 ```
 
-### 4. .htaccess Ayarları
+### 4. Dosya Yükleme
 
-Ana dizine `.htaccess` dosyası ekleyin:
-```apache
-RewriteEngine On
-RewriteBase /
-
-# API yönlendirmesi
-RewriteRule ^api/chat$ api/chat.php [L]
-RewriteRule ^api/log/(.*)$ api/log.php?action=$1 [L]
-RewriteRule ^api/auth/(.*)$ api/auth.php?action=$1 [L]
-RewriteRule ^api/admin/(.*)$ api/admin.php?action=$1 [L]
-
-# React SPA için
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.html [L]
+Paylaşımlı hosting'e yükle:
+```
+public_html/
+├── index.html      # React build
+├── index.php       # API router  
+├── config.php      # Yapılandırma
+├── api/            # API dosyaları
+├── static/         # React static
+└── .htaccess       # server-config.md'den kopyala
 ```
 
-## API Endpoints
+### 5. .htaccess Ayarları
 
-### Chat
-- `POST /api/chat` - Mesaj gönder
-
-### Logging
-- `POST /api/log/quick-action` - Hızlı eylem (su, adım, spor, kilo)
-- `GET /api/log/today` - Bugünkü log
-- `GET /api/log/history` - Geçmiş loglar
-
-### Auth
-- `POST /api/auth/session` - Google OAuth sonrası session oluştur
-- `GET /api/auth/me` - Mevcut kullanıcı
-- `POST /api/auth/logout` - Çıkış
-
-### Admin
-- `GET /api/admin/dashboard` - Dashboard istatistikleri
-- `GET /api/admin/users` - Kullanıcı listesi
-- `GET /api/admin/settings` - Ayarlar
-- `POST /api/admin/settings` - Ayarları güncelle
+`server-config.md` dosyasındaki Apache konfigürasyonunu `.htaccess` olarak kaydet.
 
 ## Güvenlik Notları
 
-1. `config.php` dosyasını web erişimine kapatın
-2. SSL sertifikası kullanın
-3. Rate limiting aktif tutun
-4. Düzenli veritabanı yedeği alın
+1. ✅ `config.php` web erişimine kapalı (.htaccess ile)
+2. ✅ SSL sertifikası kullanın
+3. ✅ Rate limiting aktif
+4. ✅ Prepared statements ile SQL injection koruması
+5. ✅ XSS koruması (JSON output)
+
+## Test
+
+```bash
+# API health check
+curl https://siteniz.com/api/health
+
+# Chat test
+curl -X POST https://siteniz.com/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Merhaba!", "language": "tr"}'
+```
+
+## Gereksinimler
+
+- PHP 8.0+
+- MySQL 5.7+ / MariaDB 10.3+
+- Apache mod_rewrite veya Nginx
+- SSL sertifikası
+- PHP Extensions: curl, json, pdo_mysql, mbstring
 
 ## Destek
 
-Herhangi bir sorunuz için GitHub Issues kullanabilirsiniz.
+Sorunlar için GitHub Issues kullanın.
