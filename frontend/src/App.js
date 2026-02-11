@@ -148,7 +148,12 @@ const MainApp = () => {
     <div className="min-h-screen bg-background">
       <div className="max-w-md mx-auto h-screen flex flex-col bg-background shadow-2xl overflow-hidden relative border-x border-border">
         <AnimatePresence mode="wait">
-          {showProfile ? (
+          {showAdmin ? (
+            <AdminPanel 
+              key="admin"
+              onBack={() => setShowAdmin(false)}
+            />
+          ) : showProfile ? (
             <ProfilePage 
               key="profile"
               user={user}
