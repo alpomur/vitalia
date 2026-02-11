@@ -850,41 +850,43 @@ $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
             let html = escapeHtml(text);
             
             // **bold** -> <strong>
-            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
             
-            // *italic* -> <em>
-            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            // Tek satırdaki numaralı listeyi ayır (1. xxx 2. yyy -> 1. xxx\n2. yyy)
+            html = html.replace(/(\d+)\.\s+/g, '\n$1. ');
+            html = html.trim();
             
-            // Numaralı liste (1. 2. 3.)
-            html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li>$2</li>');
+            // Numaralı liste itemlarını <li> yap
+            const lines = html.split('\n');
+            let inList = false;
+            let result = [];
             
-            // Liste itemlarını <ol> ile sar
-            if (html.includes('<li>')) {
-                html = html.replace(/(<li>.*<\/li>)/gs, function(match) {
-                    // Ardışık li'leri bul ve ol ile sar
-                    return '<ol class="msg-list">' + match + '</ol>';
-                });
-                // Birden fazla ol'u birleştir
-                html = html.replace(/<\/ol>\s*<ol class="msg-list">/g, '');
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+                
+                // Numaralı liste kontrolü (1. 2. 3. ...)
+                const listMatch = line.match(/^(\d+)\.\s+(.+)$/);
+                if (listMatch) {
+                    if (!inList) {
+                        result.push('<ol class="msg-list">');
+                        inList = true;
+                    }
+                    result.push('<li>' + listMatch[2] + '</li>');
+                } else {
+                    if (inList) {
+                        result.push('</ol>');
+                        inList = false;
+                    }
+                    result.push('<p>' + line + '</p>');
+                }
             }
             
-            // - ile başlayan bullet listeler
-            html = html.replace(/^-\s+(.+)$/gm, '<li class="bullet">$1</li>');
-            if (html.includes('<li class="bullet">')) {
-                html = html.replace(/(<li class="bullet">.*<\/li>)/gs, function(match) {
-                    return '<ul class="msg-list">' + match + '</ul>';
-                });
-                html = html.replace(/<\/ul>\s*<ul class="msg-list">/g, '');
+            if (inList) {
+                result.push('</ol>');
             }
             
-            // Yeni satırları <br> yap (liste içinde değilse)
-            html = html.replace(/\n/g, '<br>');
-            
-            // Temizlik: <br> ardından gelen liste etiketlerini düzelt
-            html = html.replace(/<br><(ol|ul)/g, '<$1');
-            html = html.replace(/<\/(ol|ul)><br>/g, '</$1>');
-            
-            return html;
+            return result.join('');
         }
         
         // Quick actions
