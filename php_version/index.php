@@ -22,31 +22,6 @@ $_SESSION['lang'] = $lang;
 $t = $GLOBALS['translations'][$lang] ?? $GLOBALS['translations']['tr'];
 $supportedLangs = getSupportedLanguages();
 $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
-        'admin' => 'Yönetim'
-    ],
-    'en' => [
-        'title' => 'Vitalia - Health Advisor',
-        'welcome' => 'Hello! 🌿 I\'m Vitalia, your personal health advisor. How are you feeling today?',
-        'placeholder' => 'Type your message...',
-        'send' => 'Send',
-        'water' => 'Water',
-        'steps' => 'Movement',
-        'workout' => 'Workout',
-        'weight' => 'Weight',
-        'glasses' => 'glasses',
-        'low' => 'Low',
-        'medium' => 'Medium',
-        'high' => 'High',
-        'done' => 'Done',
-        'dashboard' => 'Daily Summary',
-        'profile' => 'Profile',
-        'login' => 'Log In',
-        'logout' => 'Logout',
-        'loginPrompt' => 'Want me to remember what I told you?',
-        'waterProgress' => 'Water Progress',
-        'stepsLevel' => 'Activity Level',
-        'workoutStatus' => 'Workout Status',
-        'completed' => 'Completed',
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>" dir="<?= $isRTL ? 'rtl' : 'ltr' ?>">
