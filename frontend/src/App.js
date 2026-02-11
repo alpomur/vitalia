@@ -176,6 +176,7 @@ const MainApp = () => {
                 user={user}
                 onOpenDashboard={() => setShowDashboard(true)}
                 onOpenProfile={() => setShowProfile(true)}
+                onOpenAdmin={() => setShowAdmin(true)}
               />
               <div className="flex-1 overflow-hidden">
                 <ChatInterface 
