@@ -212,18 +212,27 @@ $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
         /* Message formatting */
         .message-content ol.msg-list,
         .message-content ul.msg-list {
-            margin: 10px 0;
-            padding-left: 20px;
+            margin: 12px 0;
+            padding-left: 24px;
         }
         
         .message-content ol.msg-list li,
         .message-content ul.msg-list li {
-            margin: 6px 0;
-            line-height: 1.5;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        
+        .message-content p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        
+        .message-content p:first-child {
+            margin-top: 0;
         }
         
         .message-content strong {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary);
         }
         
