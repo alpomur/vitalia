@@ -897,7 +897,11 @@ async def get_today_log(request: Request):
     if not user:
         guest_id = request.cookies.get("guest_id")
         if not guest_id:
-            return {"log": None}
+            # Return empty log structure for new anonymous users
+            return {
+                "log": {"water_ml": 0, "steps_level": None, "workout_done": False, "mood": None},
+                "targets": {"water_ml": 2000, "glass_ml": 250}
+            }
         user = {"user_id": guest_id}
     
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -910,8 +914,11 @@ async def get_today_log(request: Request):
     if profile and profile.get("weight_kg"):
         water_target = get_water_target(profile["weight_kg"])
     
+    # Return proper empty structure if no log exists
+    default_log = {"water_ml": 0, "steps_level": None, "workout_done": False, "mood": None}
+    
     return {
-        "log": log or {"water_ml": 0, "steps_level": None, "workout_done": False},
+        "log": log or default_log,
         "targets": {
             "water_ml": water_target,
             "glass_ml": 250
