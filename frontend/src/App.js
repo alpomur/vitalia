@@ -104,6 +104,7 @@ const MainApp = () => {
   const [user, setUser] = useState(location.state?.user || null);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(!location.state?.user);
 
   // Check auth on mount (if user not passed from AuthCallback)
