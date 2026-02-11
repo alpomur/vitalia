@@ -2,9 +2,11 @@
 /**
  * Vitalia - Ana Sayfa (Chat Interface)
  * Düz PHP + HTML/CSS/JS
+ * 10 Dil Desteği
  */
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/languages.php';
 session_start();
 
 // Guest ID oluştur
@@ -16,38 +18,10 @@ if (!isset($_SESSION['guest_id'])) {
 $lang = $_GET['lang'] ?? $_SESSION['lang'] ?? 'tr';
 $_SESSION['lang'] = $lang;
 
-// Çeviriler
-$translations = [
-    'tr' => [
-        'title' => 'Vitalia - Sağlık Danışmanı',
-        'welcome' => 'Merhaba! 🌿 Ben Vitalia, senin kişisel sağlık danışmanın. Bugün kendini nasıl hissediyorsun?',
-        'placeholder' => 'Mesajını yaz...',
-        'send' => 'Gönder',
-        'water' => 'Su',
-        'steps' => 'Hareket',
-        'workout' => 'Spor',
-        'weight' => 'Kilo',
-        'glasses' => 'bardak',
-        'low' => 'Az',
-        'medium' => 'Orta',
-        'high' => 'Çok',
-        'done' => 'Yaptım',
-        'dashboard' => 'Günlük Özet',
-        'profile' => 'Profil',
-        'login' => 'Giriş Yap',
-        'logout' => 'Çıkış',
-        'loginPrompt' => 'Sana söylediklerimi hatırlamamı ister misin?',
-        'waterProgress' => 'Su İlerlemesi',
-        'stepsLevel' => 'Hareket Seviyesi',
-        'workoutStatus' => 'Spor Durumu',
-        'completed' => 'Tamamlandı',
-        'notCompleted' => 'Tamamlanmadı',
-        'enterWeight' => 'Kilonuzu girin (kg):',
-        'age' => 'Yaş',
-        'height' => 'Boy (cm)',
-        'goal' => 'Hedef',
-        'goals' => ['lose' => 'Kilo Ver', 'maintain' => 'Koruma', 'gain' => 'Kilo Al', 'healthy' => 'Sağlıklı Yaşa'],
-        'save' => 'Kaydet',
+// Çeviriler (languages.php'den)
+$t = $GLOBALS['translations'][$lang] ?? $GLOBALS['translations']['tr'];
+$supportedLangs = getSupportedLanguages();
+$isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
         'admin' => 'Yönetim'
     ],
     'en' => [
