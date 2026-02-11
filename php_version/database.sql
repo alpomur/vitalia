@@ -293,7 +293,7 @@ INSERT INTO outside_food_categories (category_key, name, icon, sort_order) VALUE
 ('asian', 'Uzak Doğu', 'fa-bowl-rice', 4),
 ('cafe', 'Kafe / Salata', 'fa-leaf', 5),
 ('breakfast', 'Kahvaltıcı', 'fa-egg', 6)
-ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
+ON DUPLICATE KEY UPDATE name = VALUES(name), icon = VALUES(icon), sort_order = VALUES(sort_order);
 
 -- Sample motivation templates
 INSERT IGNORE INTO motivation_templates (trigger_type, language, message_text) VALUES
