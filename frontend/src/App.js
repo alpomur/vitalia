@@ -10,6 +10,7 @@ import { Dashboard } from './components/Dashboard';
 import { ProfilePage } from './components/ProfilePage';
 import { LanguageSelector } from './components/LanguageSelector';
 import { AuthCallback } from './components/AuthCallback';
+import { AdminPanel } from './components/AdminPanel';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
