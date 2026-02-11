@@ -1,162 +1,172 @@
-# Vitalia - Düz PHP + MySQL Versiyonu
-### Chat-First Kişisel Sağlıklı Yaşam Danışmanı
+# Vitalia - Chat-First Kişisel Sağlık Danışmanı
 
-Paylaşımlı hosting için hazır, React gerektirmeyen saf PHP çözümü.
+PHP + MySQL ile geliştirilmiş, paylaşımlı hosting için optimize edilmiş sağlık danışmanlığı uygulaması.
+
+## Özellikler
+
+- **AI Sohbet**: GPT-4o-mini ile sağlık danışmanlığı
+- **10 Dil Desteği**: TR, EN, DE, FR, ES, IT, PT, RU, AR, ZH
+- **Hızlı Eylemler**: Su takibi, hareket kaydı, spor ve kilo günlüğü
+- **Dashboard**: Günlük özet ve ilerleme takibi
+- **Spor Planları**: Seviyeye göre detaylı egzersiz programları
+- **Dışarıda Yemek Rehberi**: Restoran türüne göre sağlıklı seçimler
+- **Admin Panel**: Kullanıcı yönetimi ve sistem ayarları
+- **Cache Sistemi**: API maliyetlerini azaltan akıllı önbellek
+- **Rate Limiting**: Kötüye kullanımı engelleyen sınırlamalar
 
 ## Dosya Yapısı
 
 ```
 php_version/
-├── index.php        # Ana sayfa - Chat arayüzü (HTML/CSS/JS dahil)
-├── api.php          # Tüm API endpoint'leri (cache, rate limit dahil)
-├── admin.php        # Yönetim paneli (kullanıcılar, ayarlar, istatistikler)
-├── workout.php      # Spor planları sayfası (set/tekrar detaylı)
-├── food.php         # Dışarıda yemek rehberi (restoran türleri)
-├── config.php       # Yapılandırma dosyası
-├── helpers.php      # Yardımcı fonksiyonlar (cache, rate limit, güvenlik)
-├── languages.php    # 10 dil çevirileri
-├── database.sql     # MySQL veritabanı şeması (tüm tablolar)
-├── .htaccess        # Apache ayarları
-└── README.md        # Bu dosya
+├── index.php       # Ana sayfa (Chat arayüzü)
+├── api.php         # API endpoint'leri
+├── admin.php       # Admin paneli
+├── workout.php     # Spor planları sayfası
+├── food.php        # Dışarıda yemek rehberi
+├── config.php      # Yapılandırma dosyası
+├── helpers.php     # Yardımcı fonksiyonlar
+├── languages.php   # Çoklu dil çevirileri
+├── database.sql    # MySQL veritabanı şeması
+├── .htaccess       # Apache yapılandırması
+└── README.md       # Bu dosya
 ```
 
-## Özellikler
+## Kurulum
 
-### Chat Sistemi
-- ✅ OpenAI GPT-4o-mini entegrasyonu
-- ✅ Mesaj sınıflandırma (routine/faq/motivation/out_of_scope)
-- ✅ FAQ öncelikli yanıtlama (maliyet tasarrufu)
-- ✅ Q&A Cache sistemi (180 gün TTL)
-- ✅ Rate limiting (dakika/gün bazlı)
-- ✅ Kapsam dışı konuların nazik reddi
+### 1. Veritabanı Oluşturma
 
-### Hızlı Eylemler
-- ✅ Su takibi (+1 bardak, hedef hesaplama)
-- ✅ Hareket seviyesi (az/orta/çok)
-- ✅ Spor kaydı (konfeti efekti ile)
-- ✅ Kilo girişi
+1. cPanel veya phpMyAdmin'e giriş yapın
+2. Yeni bir MySQL veritabanı oluşturun (örn: `vitalia_db`)
+3. `database.sql` dosyasını import edin:
+   - phpMyAdmin > Import > Dosya Seç > `database.sql` > Git
 
-### Spor Planları
-- ✅ Başlangıç ve Orta seviye programlar
-- ✅ Ev ve Salon alternatifleri
-- ✅ Set/Tekrar/Dinlenme detayları
-- ✅ 3-4 günlük haftalık programlar
+### 2. Yapılandırma
 
-### Dışarıda Yemek Rehberi
-- ✅ Fast Food, Pizza, Kebapçı, Uzak Doğu, Kafe, Kahvaltıcı
-- ✅ En iyi seçimler (max 6)
-- ✅ Kaçınılması gerekenler
-- ✅ İpuçları
+`config.php` dosyasını düzenleyin:
 
-### 10 Dil Desteği
-🇹🇷 Türkçe | 🇬🇧 English | 🇩🇪 Deutsch | 🇫🇷 Français | 🇪🇸 Español
-🇮🇹 Italiano | 🇧🇷 Português | 🇷🇺 Русский | 🇸🇦 العربية | 🇨🇳 中文
-
-### Admin Panel
-- ✅ Dashboard (kullanıcı, mesaj, AI istatistikleri)
-- ✅ Kullanıcı yönetimi (liste, ban/unban)
-- ✅ Sistem ayarları (OpenAI, limitler, sağlık hesaplamaları)
-
-### Güvenlik
-- ✅ Rate limiting (IP ve kullanıcı bazlı)
-- ✅ Günlük mesaj limitleri
-- ✅ XSS koruması
-- ✅ Prepared statements (SQL injection koruması)
-- ✅ Güvenlik olayları logu
-
-## Kurulum (5 Dakika)
-
-### 1. Dosyaları Yükle
-Tüm dosyaları FTP ile hosting'e yükleyin.
-
-### 2. Veritabanı Oluştur
-```bash
-# cPanel > MySQL Databases'den yeni veritabanı oluşturun
-# phpMyAdmin'den database.sql dosyasını import edin
-```
-
-### 3. config.php Düzenle
 ```php
-// Veritabanı
+// Veritabanı ayarları
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'kullanici_vitalia');
-define('DB_USER', 'kullanici_dbuser');
-define('DB_PASS', 'sifreniz');
+define('DB_NAME', 'vitalia_db');      // Oluşturduğunuz veritabanı adı
+define('DB_USER', 'your_db_user');    // MySQL kullanıcı adı
+define('DB_PASS', 'your_db_password'); // MySQL şifresi
 
-// OpenAI
-define('OPENAI_API_KEY', 'sk-...');
-define('OPENAI_MODEL', 'gpt-4o-mini');
-define('OPENAI_MAX_TOKENS', 500);
-define('OPENAI_TEMPERATURE', 0.7);
-
-// Google OAuth (opsiyonel)
-define('GOOGLE_CLIENT_ID', '...');
-define('GOOGLE_CLIENT_SECRET', '...');
+// OpenAI API anahtarı
+define('OPENAI_API_KEY', 'sk-...');    // OpenAI API anahtarınız
 ```
 
-### 4. Test Et
-- Ana sayfa: `https://siteniz.com/`
-- Spor planları: `https://siteniz.com/workout.php`
-- Dışarıda yemek: `https://siteniz.com/food.php`
-- Admin panel: `https://siteniz.com/admin.php`
+### 3. Dosyaları Yükleme
 
-## API Endpoint'leri
+Tüm dosyaları FTP veya cPanel File Manager ile sunucuya yükleyin:
+- Ana klasöre (public_html) veya alt klasöre
 
-### Chat
+### 4. Erişim Kontrolü
+
+**Önemli**: Admin paneline erişimi production'da kısıtlayın.
+
+`admin.php` dosyasında yorum satırlarını kaldırın:
+
+```php
+// Production'da bu satırları aktif edin:
+if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
+    header('Location: index.php');
+    exit;
+}
+```
+
+## API Endpoints
+
+Tüm API istekleri `api.php?action=<action>` formatındadır.
+
 | Action | Method | Açıklama |
 |--------|--------|----------|
-| chat_send | POST | Mesaj gönder (cache + rate limit dahil) |
-| chat_history | GET | Chat geçmişi |
+| `chat_send` | POST | Mesaj gönder (AI yanıtı al) |
+| `chat_history` | GET | Sohbet geçmişini getir |
+| `quick_action` | POST | Hızlı eylem (su, adım, spor, kilo) |
+| `log_today` | GET | Bugünkü kayıtlar |
+| `log_history` | GET | Geçmiş kayıtlar |
+| `profile_get` | GET | Kullanıcı profilini getir |
+| `profile_save` | POST | Profil kaydet |
+| `faq_list` | GET | FAQ listesi |
 
-### Quick Actions
-| Action | Method | Açıklama |
-|--------|--------|----------|
-| quick_action | POST | Su/adım/spor/kilo kaydet |
-| log_today | GET | Bugünkü veriler |
-| log_history | GET | Geçmiş veriler |
+### Örnek İstekler
 
-### Profile
-| Action | Method | Açıklama |
-|--------|--------|----------|
-| profile_get | GET | Profil bilgileri |
-| profile_save | POST | Profil güncelle |
+```javascript
+// Mesaj gönder
+fetch('api.php?action=chat_send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'Günde kaç bardak su içmeliyim?', language: 'tr' })
+});
 
-### FAQ
-| Action | Method | Açıklama |
-|--------|--------|----------|
-| faq_list | GET | FAQ listesi |
+// Su ekle
+fetch('api.php?action=quick_action', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action_type: 'water', value: 250 })
+});
+```
 
-## Veritabanı Tabloları
+## Desteklenen Diller
 
-- `users` - Kullanıcılar
-- `profiles` - Profil bilgileri
-- `user_sessions` - Oturum bilgileri
-- `chat_messages` - Chat mesajları
-- `daily_logs` - Günlük loglar
-- `weight_logs` - Kilo logları
-- `qa_faq` - Hazır FAQ cevapları
-- `qa_cache` - Dinamik cache
-- `openai_usage_daily` - AI kullanım takibi
-- `admin_settings` - Sistem ayarları
-- `security_events` - Güvenlik olayları
-- `rate_limit_events` - Rate limit takibi
-- `workout_plans` - Spor planları
-- `workout_plan_days` - Plan günleri
-- `workout_exercises` - Egzersizler
-- `outside_food_categories` - Dışarıda yemek kategorileri
-- `outside_food_items` - Yemek önerileri
-- `motivation_templates` - Motivasyon şablonları
+| Kod | Dil | RTL |
+|-----|-----|-----|
+| tr | Türkçe | ❌ |
+| en | English | ❌ |
+| de | Deutsch | ❌ |
+| fr | Français | ❌ |
+| es | Español | ❌ |
+| it | Italiano | ❌ |
+| pt | Português | ❌ |
+| ru | Русский | ❌ |
+| ar | العربية | ✅ |
+| zh | 中文 | ❌ |
 
-## Gereksinimler
+## Admin Panel
 
-- PHP 7.4+ (8.x önerilir)
-- MySQL 5.7+ / MariaDB 10.3+
-- PHP Extensions: curl, json, pdo_mysql, mbstring
-- Apache mod_rewrite (opsiyonel)
+Admin paneline erişim: `yoursite.com/admin.php`
 
-## Notlar
+Özellikler:
+- Kullanıcı istatistikleri
+- Kullanıcı yönetimi (ban/unban)
+- OpenAI ayarları
+- Günlük limit ayarları
+- Sağlık hesaplama parametreleri
 
-1. **OpenAI API anahtarı zorunludur** - https://platform.openai.com/api-keys
-2. **Admin güvenliği**: Production'da `admin.php`'deki admin kontrolünü aktifleştirin
-3. **HTTPS önerilir**: SSL sertifikası kullanın
-4. **Yedekleme**: Veritabanını düzenli yedekleyin
+## Güvenlik Notları
+
+1. **config.php**: `.htaccess` ile koruma altındadır
+2. **Admin Paneli**: Production'da session kontrolü ekleyin
+3. **Rate Limiting**: Varsayılan 10 istek/dakika
+4. **XSS Koruması**: Tüm çıktılar sanitize edilir
+5. **SQL Injection**: PDO prepared statements kullanılır
+
+## Sistem Gereksinimleri
+
+- PHP 7.4+ (önerilen: PHP 8.0+)
+- MySQL 5.7+ veya MariaDB 10.3+
+- Apache mod_rewrite (isteğe bağlı)
+- cURL PHP eklentisi
+- mbstring PHP eklentisi
+
+## Troubleshooting
+
+### "Database connection failed"
+- `config.php` içindeki veritabanı bilgilerini kontrol edin
+- MySQL kullanıcısının veritabanına erişim yetkisi olduğundan emin olun
+
+### "OpenAI API Error"
+- API anahtarınızın geçerli olduğunu kontrol edin
+- API kotanızı kontrol edin
+
+### "Session Not Working"
+- PHP session ayarlarını kontrol edin
+- `session_start()` çağrıldığından emin olun
+
+## Lisans
+
+MIT License
+
+## Destek
+
+Sorularınız için GitHub Issues kullanın.
