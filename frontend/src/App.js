@@ -50,15 +50,19 @@ const ThemeToggle = () => {
 };
 
 // Header Component
-const Header = ({ user, onOpenDashboard, onOpenProfile }) => {
+const Header = ({ user, onOpenDashboard, onOpenProfile, onOpenAdmin }) => {
   const { t } = useLanguage();
   
   return (
     <header className="flex items-center justify-between p-4 border-b border-border bg-background/80 backdrop-blur-lg sticky top-0 z-30">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+        <button 
+          onClick={onOpenAdmin}
+          className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center hover:scale-105 transition-transform"
+          data-testid="open-admin-btn"
+        >
           <span className="text-white font-bold text-lg">V</span>
-        </div>
+        </button>
         <div>
           <h1 className="font-bold font-heading text-lg">Vitalia</h1>
           <p className="text-xs text-muted-foreground">
