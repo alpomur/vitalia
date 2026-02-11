@@ -47,21 +47,9 @@ $isRTL = ($t['dir'] ?? 'ltr') === 'rtl';
         'stepsLevel' => 'Activity Level',
         'workoutStatus' => 'Workout Status',
         'completed' => 'Completed',
-        'notCompleted' => 'Not Completed',
-        'enterWeight' => 'Enter your weight (kg):',
-        'age' => 'Age',
-        'height' => 'Height (cm)',
-        'goal' => 'Goal',
-        'goals' => ['lose' => 'Lose Weight', 'maintain' => 'Maintain', 'gain' => 'Gain Weight', 'healthy' => 'Live Healthy'],
-        'save' => 'Save',
-        'admin' => 'Admin'
-    ]
-];
-
-$t = $translations[$lang] ?? $translations['tr'];
 ?>
 <!DOCTYPE html>
-<html lang="<?= $lang ?>">
+<html lang="<?= $lang ?>" dir="<?= $isRTL ? 'rtl' : 'ltr' ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
