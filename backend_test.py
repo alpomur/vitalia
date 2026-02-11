@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 
 # Use the public endpoint for testing
-API_BASE_URL = "https://health-chat-ai-4.preview.emergentagent.com/api"
+API_BASE_URL = "https://wellness-first.preview.emergentagent.com/api"
 
 class VitaliaAPITester:
     def __init__(self):
