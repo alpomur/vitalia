@@ -262,7 +262,56 @@ function logUsage($pdo, $userId, $inputTokens, $outputTokens) {
 // Main handler
 try {
     $pdo = getDbConnection();
+    session_start();
     
+    $action = $_GET['action'] ?? 'send';
+    
+    // Handle history endpoint
+    if ($action === 'history') {
+        $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 50;
+        
+        // Get user
+        $guestId = $_SESSION['guest_id'] ?? null;
+        $userId = null;
+        
+        // Check for authenticated user
+        $sessionToken = $_COOKIE['session_token'] ?? null;
+        if ($sessionToken) {
+            $stmt = $pdo->prepare("SELECT user_id FROM user_sessions WHERE session_token = ? AND expires_at > NOW()");
+            $stmt->execute([$sessionToken]);
+            $session = $stmt->fetch();
+            if ($session) {
+                $userId = $session['user_id'];
+            }
+        }
+        
+        if (!$userId && $guestId) {
+            $userId = $guestId;
+        }
+        
+        if (!$userId) {
+            echo json_encode(['messages' => [], 'user_id' => null]);
+            exit;
+        }
+        
+        $stmt = $pdo->prepare("
+            SELECT message_id as id, user_id, role, message_type, message_text, created_at 
+            FROM chat_messages 
+            WHERE user_id = ? 
+            ORDER BY created_at DESC 
+            LIMIT ?
+        ");
+        $stmt->execute([$userId, $limit]);
+        $messages = $stmt->fetchAll();
+        
+        // Reverse for chronological order
+        $messages = array_reverse($messages);
+        
+        echo json_encode(['messages' => $messages, 'user_id' => $userId]);
+        exit;
+    }
+    
+    // Handle send endpoint
     // Get request data
     $input = json_decode(file_get_contents('php://input'), true);
     $message = trim($input['message'] ?? '');
@@ -274,7 +323,6 @@ try {
     }
     
     // Get or create user
-    session_start();
     $guestId = $_SESSION['guest_id'] ?? ('guest_' . bin2hex(random_bytes(6)));
     $_SESSION['guest_id'] = $guestId;
     
